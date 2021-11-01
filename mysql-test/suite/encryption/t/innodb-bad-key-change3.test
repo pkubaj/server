@@ -11,6 +11,7 @@
 
 call mtr.add_suppression("InnoDB: Tablespace for table .* is set as discarded.");
 call mtr.add_suppression("InnoDB: Cannot calculate statistics for table .* because the .ibd file is missing. Please refer to .* for how to resolve the issue.");
+call mtr.add_suppression("Index for table .* is corrupt; try to repair it");
 
 --let $MYSQLD_TMPDIR = `SELECT @@tmpdir`
 --let $MYSQLD_DATADIR = `SELECT @@datadir`
@@ -67,7 +68,7 @@ EOF
 --source include/wait_until_connected_again.inc
 --source include/restart_mysqld.inc
 
---error ER_GET_ERRMSG
+--error ER_NOT_KEYFILE
 ALTER TABLE t1 IMPORT TABLESPACE;
 SHOW CREATE TABLE t1;
 --error ER_TABLESPACE_DISCARDED
